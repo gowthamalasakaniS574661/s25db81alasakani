@@ -2,4 +2,16 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Hello from Assignment 10!
+  button(type="button", class="btn btn-secondary", onclick="faster()") Press Me
+  div#faster Add in extra
+
+  script.
+    let value = 1;
+    let amt = 2;
+
+    function faster() {
+      amt *= 2;
+      value += amt;
+      document.getElementById("faster").innerText = `Faster ${value} times ${amt}`;
+    }

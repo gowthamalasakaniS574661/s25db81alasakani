@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1 #{title}
+
+  -
+    const results = [
+      { origin: 'Greece', age: 2300, material: 'Marble' },
+      { origin: 'Egypt', age: 3500, material: 'Gold' },
+      { origin: 'India', age: 1500, material: 'Bronze' }
+    ]
+
+  .container-fluid
+    .row
+      each artifact in results
+        .col-sm-2
+          h4 Artifact
+          p Origin: #{artifact.origin}
+          p Age: #{artifact.age} years
+          p Material: #{artifact.material}
