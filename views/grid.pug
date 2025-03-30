@@ -1,5 +1,24 @@
 extends layout
 
 block content
-  h1= title
-  p Query received for rows = #{query.rows}, cols = #{query.cols}
+  h1 #{title}
+
+  p Rows = #{query.rows}, Cols = #{query.cols}
+
+  - const rows = Number(query.rows)
+  - const cols = Number(query.cols)
+
+  if !Number.isInteger(rows) || !Number.isInteger(cols)
+    p Invalid input. Please enter integers for rows and cols.
+  else if rows < 3 || rows > 13
+    p Row count must be between 3 and 13.
+  else if cols < 3 || cols > 13
+    p Column count must be between 3 and 13.
+  else
+    table#outer.table.table-bordered
+      - for (let i = 0; i < rows; i++) {
+        tr#middle
+          - for (let j = 0; j < cols; j++) {
+            td= i - j
+          - }
+      - }
