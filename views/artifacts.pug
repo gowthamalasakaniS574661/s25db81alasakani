@@ -8,13 +8,20 @@ block content
       { origin: 'Greece', age: 2300, material: 'Marble' },
       { origin: 'Egypt', age: 3500, material: 'Gold' },
       { origin: 'India', age: 1500, material: 'Bronze' }
-    ]
+    ];
 
   .container-fluid
     .row
-      each artifact in results
-        .col-sm-2
+      - for (let i = 0; i < results.length; i++) {
+        - const artifact = results[i];
+        .col-sm-2(onclick=`buy(${i})`)
           h4 Artifact
           p Origin: #{artifact.origin}
           p Age: #{artifact.age} years
           p Material: #{artifact.material}
+      - }
+
+  script.
+    function buy(index) {
+      alert(`You purchased item ${index}`);
+    }

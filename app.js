@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var artifactsRouter = require('./routes/artifacts');
 var gridRouter = require('./routes/grid');
+var pickRouter = require('./routes/pick');
+
 
 
 
@@ -24,6 +26,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/artifacts', artifactsRouter);
 app.use('/grid', gridRouter);
+app.use('/pick', pickRouter);
+
 
 
 

@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 A Random Item Display
+
+  -
+    const image_names = ['artifact1.jpg', 'artifact2.jpg', 'artifact3.jpg', 'artifact4.jpg', 'artifact5.jpg'];
+
+  - for (let i = 0; i < 3; i++) {
+    - const index = Math.floor(Math.random() * 5);
+    - const img = image_names[index];
+    img(src=`/images/${img}`, alt=`Artifact ${index + 1}`, width="300", height="300")
+  - }
