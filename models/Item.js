@@ -1,18 +1,8 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const itemSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  quantity: {
-    type: Number,
-    default: 1
-  },
-  addedAt: {
-    type: Date,
-    default: Date.now
-  }
+  name: String,
+  quantity: Number
 });
 
-module.exports = mongoose.model('Item', itemSchema);
+module.exports = mongoose.models.Item || mongoose.model("Item", itemSchema);
