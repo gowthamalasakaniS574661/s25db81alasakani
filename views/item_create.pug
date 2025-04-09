@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 Add New Item
+
+  form(method='POST', action='/items')
+    div
+      label(for='name') Name:
+      input(type='text', name='name', required=true, placeholder='Enter item name')
+    div
+      label(for='quantity') Quantity:
+      input(type='number', name='quantity', required=true, placeholder='Enter quantity')
+    button(type='submit') Create Item

@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method="POST", action="/items")
+    div
+      label(for="name") Name:
+      input(type="text", name="name", required)
+    div
+      label(for="quantity") Quantity:
+      input(type="number", name="quantity", required)
+    div
+      button(type="submit") Add Item
+
+  hr
+
+  if results.length
+    table(border="1")
+      thead
+        tr
+          th Name
+          th Quantity
+          th Actions
+      tbody
+        each item in results
+          tr
+            form(method="POST", action=`/items/${item._id}?_method=PUT`)
+              td
+                input(type="text", name="name", value=item.name)
+              td
+                input(type="number", name="quantity", value=item.quantity)
+              td
+                button(type="submit") Update
+            form(method="POST", action=`/items/${item._id}?_method=DELETE`)
+              td(colspan="3")
+                button(type="submit") Delete
+  else
+    p No items found.

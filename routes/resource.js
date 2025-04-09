@@ -1,20 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const item_controller = require('../controllers/item');
 
-router.get('/', function(req, res) {
-  res.send([
-    {
-      resource: 'items',
-      verbs: ['GET', 'POST', 'PUT', 'DELETE']
-    }
-  ]);
-});
+// ✅ Load the correct controllers
+const api_controller = require('../controllers/api');
+const artifact_controller = require('../controllers/artifact');
 
-router.get('/items', item_controller.item_list);
-router.get('/items/:id', item_controller.item_detail);
-router.post('/items', item_controller.item_create_post);
-router.delete('/items/:id', item_controller.item_delete);
-router.put('/items/:id', item_controller.item_update_put);
+/// API ROOT ///
+router.get('/', api_controller.api);
+
+/// ARTIFACT ROUTES ///
+router.get('/artifacts', artifact_controller.artifact_list);
+router.get('/artifacts/:id', artifact_controller.artifact_detail);
+router.post('/artifacts', artifact_controller.artifact_create_post);
+router.put('/artifacts/:id', artifact_controller.artifact_update_put);
+router.delete('/artifacts/:id', artifact_controller.artifact_delete);
 
 module.exports = router;

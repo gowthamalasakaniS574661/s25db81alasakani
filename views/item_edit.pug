@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 Edit Item
+  form(action=`/items/${item._id}?_method=PUT`, method="POST")
+    div
+      label(for="name") Name:
+      input(type="text", name="name", value=item.name)
+    div
+      label(for="quantity") Quantity:
+      input(type="number", name="quantity", value=item.quantity)
+    div
+      button(type="submit") Save

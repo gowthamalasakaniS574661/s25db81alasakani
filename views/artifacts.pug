@@ -1,27 +1,23 @@
 extends layout
 
 block content
-  h1 #{title}
+  h1= title
+  form(action='/artifacts', method='POST')
+    input.form-control(type='text', name='name', placeholder='Name')
+    input.form-control(type='number', name='age', placeholder='Age')
+    input.form-control(type='text', name='origin', placeholder='Origin')
+    button.btn.btn-success.mt-2(type='submit') Create
 
-  -
-    const results = [
-      { origin: 'Greece', age: 2300, material: 'Marble' },
-      { origin: 'Egypt', age: 3500, material: 'Gold' },
-      { origin: 'India', age: 1500, material: 'Bronze' }
-    ];
+  hr
 
-  .container-fluid
-    .row
-      - for (let i = 0; i < results.length; i++) {
-        - const artifact = results[i];
-        .col-sm-2(onclick=`buy(${i})`)
-          h4 Artifact
-          p Origin: #{artifact.origin}
-          p Age: #{artifact.age} years
-          p Material: #{artifact.material}
-      - }
-
-  script.
-    function buy(index) {
-      alert(`You purchased item ${index}`);
-    }
+  each artifact in results
+    div.card.mb-2.p-2
+      h4= artifact.name
+      p Age: #{artifact.age}, Origin: #{artifact.origin}
+      form(action=`/artifacts/${artifact._id}?_method=DELETE`, method='POST', style='display:inline')
+        button.btn.btn-danger(type='submit') Delete
+      form(action=`/artifacts/${artifact._id}?_method=PUT`, method='POST', style='display:inline')
+        input(type='text', name='name', placeholder='New Name')
+        input(type='number', name='age', placeholder='New Age')
+        input(type='text', name='origin', placeholder='New Origin')
+        button.btn.btn-warning(type='submit') Update

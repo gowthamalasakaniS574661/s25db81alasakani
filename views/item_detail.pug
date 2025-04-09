@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+  form(method='POST', action=`/items/${item._id}?_method=PUT`)
+    div
+      label(for='name') Name:
+      input(type='text', name='name', value=item.name)
+    div
+      label(for='quantity') Quantity:
+      input(type='number', name='quantity', value=item.quantity)
+    button(type='submit') Update Item
+  form(method='POST', action=`/items/${item._id}?_method=DELETE`, style='margin-top:1em')
+    button(type='submit') Delete Item
