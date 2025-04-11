@@ -54,3 +54,38 @@ exports.artifact_view_all_Page = async (req, res) => {
     res.status(500).send({ error: err.message });
   }
 };
+
+// GET one artifact by ID
+exports.artifact_detail = async function (req, res) {
+  console.log("Fetching detail for ID:", req.params.id);
+  try {
+    const result = await Artifact.findById(req.params.id);
+    if (!result) {
+      res.status(404).send(`{"error": "Document for ID ${req.params.id} not found"}`);
+    } else {
+      res.send(result);
+    }
+  } catch (error) {
+    res.status(500).send(`{"error": "Error fetching artifact: ${error}"}`);
+  }
+};
+
+exports.artifact_update_put = async function (req, res) {
+  console.log(`🔄 Updating artifact ${req.params.id} with`, req.body);
+  try {
+    let toUpdate = await Artifact.findById(req.params.id);
+    if (!toUpdate) {
+      return res.status(404).send({ error: "Artifact not found" });
+    }
+
+    // Only update fields if provided
+    if (req.body.name) toUpdate.name = req.body.name;
+    if (req.body.age) toUpdate.age = req.body.age;
+    if (req.body.origin) toUpdate.origin = req.body.origin;
+
+    let result = await toUpdate.save();
+    res.send(result);
+  } catch (err) {
+    res.status(500).send({ error: `${err}: Update for id ${req.params.id} failed` });
+  }
+};

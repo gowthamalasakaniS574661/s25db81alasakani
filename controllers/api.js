@@ -1,4 +1,3 @@
-// API controller to describe available resources
 exports.api = function (req, res) {
   res.write('[');
   res.write('{"resource":"artifacts", ');
