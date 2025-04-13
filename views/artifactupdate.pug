@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1= title
+
+  - let artifactid = toShow._id
+  - let name = toShow.name
+  - let age = toShow.age
+  - let origin = toShow.origin
+
+  form(id='ArtifactForm', action=`/artifacts/${artifactid}?_method=PUT`, method="POST")
+    div.form-group
+      label(for='name') Name
+      input#name(type='text', name='name', value=name required)
+
+    div.form-group
+      label(for='age') Age
+      input#age(type='number', name='age', value=age required)
+
+    div.form-group
+      label(for='origin') Origin
+      input#origin(type='text', name='origin', value=origin required)
+
+    button(type='submit' class='btn btn-primary') Update
+    a.btn.btn-secondary(href='/artifacts') Cancel

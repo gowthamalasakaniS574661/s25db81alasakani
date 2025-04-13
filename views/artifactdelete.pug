@@ -1,0 +1,49 @@
+extends layout
+
+block content
+  h1= title
+
+  if toShow
+    - let id = toShow._id
+    - let name = toShow.name
+    - let age = toShow.age
+    - let origin = toShow.origin
+    - let actionUrl = `/resource/artifacts/${id}`
+
+    div
+      p
+        strong ID:
+        | #{id}
+      p
+        strong Name:
+        | #{name}
+      p
+        strong Age:
+        | #{age}
+      p
+        strong Origin:
+        | #{origin}
+
+    button.btn.btn-danger(onclick="deleteArtifact()") Delete
+    button.btn.btn-secondary(onclick="cancelDelete()") Cancel
+
+    script.
+      function cancelDelete() {
+        window.location.href = "/artifacts";
+      }
+
+      function deleteArtifact() {
+        fetch("#{actionUrl}", {
+          method: "DELETE"
+        })
+        .then(res => res.json())
+        .then(data => {
+          alert("Deleted successfully!");
+          window.location.href = "/artifacts";
+        })
+        .catch(err => {
+          alert("Delete failed: " + err);
+        });
+      }
+  else
+    h3 No artifact found to delete.

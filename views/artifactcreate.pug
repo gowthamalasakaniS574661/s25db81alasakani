@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  h1= title
+
+  form(id='ArtifactForm', action="/artifacts", method="POST")
+    div.form-group
+      label(for='name') Name
+      input#name.form-control(type='text', name='name')
+    div.form-group
+      label(for='age') Age
+      input#age.form-control(type='number', name='age')
+    div.form-group
+      label(for='origin') Origin
+      input#origin.form-control(type='text', name='origin')
+    button.btn.btn-primary(type="submit") Create
+
+  script.
+    document.forms['ArtifactForm'].addEventListener('submit', (event) => {
+      event.preventDefault();
+      fetch(event.target.action, {
+        method: 'POST',
+        body: new URLSearchParams(new FormData(event.target)),
+        headers: {
+          'Accept': 'application/json' // 👈 makes it behave as API request
+        }
+      })
+      .then(async (resp) => {
+        if (!resp.ok) {
+          const text = await resp.text(); // fallback to raw error
+          throw new Error("Server returned error: " + text);
+        }
+        return resp.json(); // ✅ safe to parse as JSON
+      })
+      .then((body) => {
+        alert("Save succeeded!");
+        window.location.href = "/artifacts"; // 👈 redirect after success
+      })
+      .catch((error) => {
+        alert("Save failed: " + error.message);
+      });
+    });

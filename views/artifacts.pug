@@ -1,23 +1,25 @@
 extends layout
 
 block content
-  h1= title
-  form(action='/artifacts', method='POST')
-    input.form-control(type='text', name='name', placeholder='Name')
-    input.form-control(type='number', name='age', placeholder='Age')
-    input.form-control(type='text', name='origin', placeholder='Origin')
-    button.btn.btn-success.mt-2(type='submit') Create
+  h1.text-center.mt-4.mb-4.text-primary #{title}
 
-  hr
+  // Create Button
+  .text-center.mb-4
+    a.btn.btn-success(href='/artifacts/create') ➕ Add New Artifact
 
-  each artifact in results
-    div.card.mb-2.p-2
-      h4= artifact.name
-      p Age: #{artifact.age}, Origin: #{artifact.origin}
-      form(action=`/artifacts/${artifact._id}?_method=DELETE`, method='POST', style='display:inline')
-        button.btn.btn-danger(type='submit') Delete
-      form(action=`/artifacts/${artifact._id}?_method=PUT`, method='POST', style='display:inline')
-        input(type='text', name='name', placeholder='New Name')
-        input(type='number', name='age', placeholder='New Age')
-        input(type='text', name='origin', placeholder='New Origin')
-        button.btn.btn-warning(type='submit') Update
+  // Artifact Grid
+  .container
+    .row
+      each artifact in results
+        .col-md-4.mb-4
+          .card.shadow-sm
+            .card-body
+              h5.card-title.text-capitalize #{artifact.name}
+              h6.card-subtitle.mb-2.text-muted Age: #{artifact.age}
+              p.card-text Origin: #{artifact.origin}
+
+              // Button Group
+              .d-flex.justify-content-between.mt-3
+                a.btn.btn-outline-info.btn-sm(href=`/artifacts/detail?id=${artifact._id}`) 👁️ View
+                a.btn.btn-outline-warning.btn-sm(href=`/artifacts/update?id=${artifact._id}`) ✏️ Edit
+                a.btn.btn-outline-danger.btn-sm(href=`/artifacts/delete?id=${artifact._id}`) ❌ Delete
