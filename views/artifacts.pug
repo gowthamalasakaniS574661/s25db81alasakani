@@ -1,25 +1,35 @@
 extends layout
 
 block content
-  h1.text-center.mt-4.mb-4.text-primary #{title}
+  h1.text-center.text-primary.mt-4.mb-4 #{title}
 
   // Create Button
   .text-center.mb-4
-    a.btn.btn-success(href='/artifacts/create') ➕ Add New Artifact
+    a.btn.btn-success.btn-lg(href='/artifacts/create')
+      i.bi.bi-plus-circle-fill.me-2
+      | Add New Artifact
 
-  // Artifact Grid
+  // Artifact Cards Grid
   .container
     .row
       each artifact in results
-        .col-md-4.mb-4
-          .card.shadow-sm
-            .card-body
-              h5.card-title.text-capitalize #{artifact.name}
-              h6.card-subtitle.mb-2.text-muted Age: #{artifact.age}
-              p.card-text Origin: #{artifact.origin}
+        .col-md-6.col-lg-4.mb-4
+          .card.h-100.shadow.border-0
+            .card-body.d-flex.flex-column
+              h5.card-title.text-capitalize.mb-1.text-dark #{artifact.name}
+              h6.card-subtitle.text-muted.mb-2 Age: #{artifact.age}
+              p.card-text.mb-3 Origin: #{artifact.origin}
 
-              // Button Group
-              .d-flex.justify-content-between.mt-3
-                a.btn.btn-outline-info.btn-sm(href=`/artifacts/detail?id=${artifact._id}`) 👁️ View
-                a.btn.btn-outline-warning.btn-sm(href=`/artifacts/update?id=${artifact._id}`) ✏️ Edit
-                a.btn.btn-outline-danger.btn-sm(href=`/artifacts/delete?id=${artifact._id}`) ❌ Delete
+              // Action Buttons
+              .mt-auto.d-flex.justify-content-between
+                a.btn.btn-sm.btn-outline-info(href=`/artifacts/detail?id=${artifact._id}`)
+                  i.bi.bi-eye-fill.me-1
+                  | View
+
+                a.btn.btn-sm.btn-outline-warning(href=`/artifacts/update?id=${artifact._id}`)
+                  i.bi.bi-pencil-fill.me-1
+                  | Edit
+
+                a.btn.btn-sm.btn-outline-danger(href=`/artifacts/delete?id=${artifact._id}`)
+                  i.bi.bi-trash-fill.me-1
+                  | Delete
