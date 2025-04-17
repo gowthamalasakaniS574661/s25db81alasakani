@@ -7,5 +7,7 @@ router.get("/artifacts/:id", artifactController.artifact_detail);
 router.post("/artifacts", artifactController.artifact_create_post);
 router.put("/artifacts/:id", artifactController.artifact_update_put);
 router.delete("/artifacts/:id", artifactController.artifact_delete);
+router.get("/artifacts", artifactController.artifact_list);
+
 
 module.exports = router;

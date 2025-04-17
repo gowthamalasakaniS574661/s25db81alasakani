@@ -54,6 +54,8 @@ app.use('/artifacts', artifactsRouter); // ✅ Your main CRUD route
 app.use('/grid', gridRouter);
 app.use('/pick', pickRouter);
 app.use('/resource', resourceRouter);   // ✅ REST API access to artifacts
+app.use('/resource', resourceRouter);
+
 
 // 404 handler
 app.use((req, res, next) => {

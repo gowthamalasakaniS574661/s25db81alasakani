@@ -1,25 +1,46 @@
 extends layout
 
 block content
-  h1= title
+  h1.text-center.text-warning.mb-4 Update Artifact
 
-  - let artifactid = toShow._id
-  - let name = toShow.name
-  - let age = toShow.age
-  - let origin = toShow.origin
+  .container
+    if (!toShow)
+      .alert.alert-danger.text-center No artifact found with the provided ID.
+    else
+      .card.shadow
+        .card-body
+          h5.card-title.text-muted.mb-4 Artifact ID: #{toShow._id}
 
-  form(id='ArtifactForm', action=`/artifacts/${artifactid}?_method=PUT`, method="POST")
-    div.form-group
-      label(for='name') Name
-      input#name(type='text', name='name', value=name required)
+          form#ArtifactForm(action=`/resource/artifacts/${toShow._id}?_method=PUT`, method="POST")
+            .mb-3
+              label.form-label(for='name') Name
+              input#name.form-control(type='text', name='name', value=toShow.name, required)
 
-    div.form-group
-      label(for='age') Age
-      input#age(type='number', name='age', value=age required)
+            .mb-3
+              label.form-label(for='age') Age
+              input#age.form-control(type='number', name='age', value=toShow.age, required)
 
-    div.form-group
-      label(for='origin') Origin
-      input#origin(type='text', name='origin', value=origin required)
+            .mb-3
+              label.form-label(for='origin') Origin
+              input#origin.form-control(type='text', name='origin', value=toShow.origin, required)
 
-    button(type='submit' class='btn btn-primary') Update
-    a.btn.btn-secondary(href='/artifacts') Cancel
+            .d-flex.justify-content-between.mt-4
+              button.btn.btn-primary(type="submit") 💾 Save Changes
+              a.btn.btn-secondary(href="/artifacts") Cancel
+
+  script.
+    document.getElementById('ArtifactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      fetch(e.target.action, {
+        method: 'PUT',
+        body: new URLSearchParams(new FormData(e.target))
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert("✅ Update successful");
+        window.location.href = "/artifacts";
+      })
+      .catch(err => {
+        alert("❌ Update failed: " + err.message);
+      });
+    });

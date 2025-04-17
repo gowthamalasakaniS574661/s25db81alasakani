@@ -1,21 +1,25 @@
 extends layout
 
 block content
-  h1= title
-  - let artifactId = toShow._id
-  - let name = toShow.name
-  - let age = toShow.age
-  - let origin = toShow.origin
-
-  div.row.mb-2
-    div.mr-1 Artifact ID:
-    div #{artifactId}
-  div.row.mb-2
-    div.mr-1 Name:
-    div #{name}
-  div.row.mb-2
-    div.mr-1 Age:
-    div #{age}
-  div.row.mb-2
-    div.mr-1 Origin:
-    div #{origin}
+  .container.mt-5
+    .card.shadow-sm
+      .card-header.bg-primary.text-white
+        h3.mb-0 Artifact Detail
+      .card-body
+        if !toShow
+          .alert.alert-danger No artifact found with this ID.
+        else
+          ul.list-group
+            li.list-group-item
+              strong ID: 
+              | #{toShow._id}
+            li.list-group-item
+              strong Name: 
+              | #{toShow.name}
+            li.list-group-item
+              strong Age: 
+              | #{toShow.age}
+            li.list-group-item
+              strong Origin: 
+              | #{toShow.origin}
+    a.btn.btn-secondary.mt-3(href='/artifacts') ← Back to List

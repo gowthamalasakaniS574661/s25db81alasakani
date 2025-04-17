@@ -1,32 +1,38 @@
 const Artifact = require("../models/artifact");
 
+// === API CONTROLLERS ===
+
+// GET all artifacts (API)
 exports.artifact_list = async (req, res) => {
   try {
     const artifacts = await Artifact.find();
     res.json(artifacts);
   } catch (err) {
-    res.status(500).send({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
 
+// GET one artifact by ID (API)
 exports.artifact_detail = async (req, res) => {
   try {
     const artifact = await Artifact.findById(req.params.id);
     if (!artifact) {
-      return res.status(404).send({ error: `Artifact with ID ${req.params.id} not found` });
+      return res.status(404).json({ error: `Artifact with ID ${req.params.id} not found` });
     }
-    res.send(artifact);
+    res.json(artifact);
   } catch (error) {
-    res.status(500).send({ error: `Error fetching artifact: ${error}` });
+    res.status(500).json({ error: `Error fetching artifact: ${error}` });
   }
 };
 
+// POST create new artifact (API + FORM)
 exports.artifact_create_post = async (req, res) => {
   try {
     const artifact = new Artifact(req.body);
     const result = await artifact.save();
+
     if (req.headers.accept && req.headers.accept.includes("application/json")) {
-      res.json(result);
+      res.status(201).json(result); // API response
     } else {
       res.redirect("/artifacts");
     }
@@ -39,32 +45,37 @@ exports.artifact_create_post = async (req, res) => {
   }
 };
 
+// PUT update artifact (API + FORM)
 exports.artifact_update_put = async (req, res) => {
   try {
-    let toUpdate = await Artifact.findById(req.params.id);
-    if (!toUpdate) return res.status(404).send({ error: "Artifact not found" });
+    const artifact = await Artifact.findById(req.params.id);
+    if (!artifact) return res.status(404).send({ error: "Artifact not found" });
 
-    if (req.body.name) toUpdate.name = req.body.name;
-    if (req.body.age) toUpdate.age = req.body.age;
-    if (req.body.origin) toUpdate.origin = req.body.origin;
+    if (req.body.name) artifact.name = req.body.name;
+    if (req.body.age) artifact.age = req.body.age;
+    if (req.body.origin) artifact.origin = req.body.origin;
 
-    const result = await toUpdate.save();
+    const result = await artifact.save();
     res.send(result);
   } catch (err) {
     res.status(500).send({ error: `${err}: Update failed for ID ${req.params.id}` });
   }
 };
 
+// DELETE artifact (API + FORM)
 exports.artifact_delete = async (req, res) => {
   try {
     const result = await Artifact.findByIdAndDelete(req.params.id);
-    if (!result) return res.status(404).send({ error: "Artifact not found" });
+    if (!result) return res.status(404).json({ error: "Artifact not found" });
     res.send(result);
   } catch (err) {
-    res.status(500).send({ error: `Error deleting artifact: ${err}` });
+    res.status(500).json({ error: `Error deleting artifact: ${err}` });
   }
 };
 
+// === PUG VIEW CONTROLLERS ===
+
+// Render list of artifacts
 exports.artifact_view_all_Page = async (req, res) => {
   try {
     const results = await Artifact.find();
@@ -74,17 +85,22 @@ exports.artifact_view_all_Page = async (req, res) => {
   }
 };
 
+// Render detail view for one artifact
 exports.artifact_detail_page = async (req, res) => {
   try {
     const result = await Artifact.findById(req.query.id);
-    if (!result) return res.status(404).send("Artifact not found");
-    res.render("artifactdetail", { title: "Artifact Detail", toShow: result });
+    if (!result) {
+      res.render("artifactdetail", { title: "Artifact Detail", toShow: null });
+    } else {
+      res.render("artifactdetail", { title: "Artifact Detail", toShow: result });
+    }
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
 };
 
-exports.artifact_create_Page = function (req, res) {
+// Render create form
+exports.artifact_create_Page = (req, res) => {
   try {
     res.render("artifactcreate", { title: "Create Artifact" });
   } catch (err) {
@@ -92,19 +108,29 @@ exports.artifact_create_Page = function (req, res) {
   }
 };
 
-exports.artifact_update_Page = async function (req, res) {
+// Render update form
+exports.artifact_update_Page = async (req, res) => {
   try {
     const result = await Artifact.findById(req.query.id);
-    res.render("artifactupdate", { title: "Update Artifact", toShow: result });
+    if (!result) {
+      res.render("artifactupdate", { title: "Update Artifact", toShow: null });
+    } else {
+      res.render("artifactupdate", { title: "Update Artifact", toShow: result });
+    }
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
 };
 
-exports.artifact_delete_Page = async function (req, res) {
+// Render delete confirmation view
+exports.artifact_delete_Page = async (req, res) => {
   try {
     const result = await Artifact.findById(req.query.id);
-    res.render("artifactdelete", { title: "Delete Artifact", toShow: result });
+    if (!result) {
+      res.render("artifactdelete", { title: "Delete Artifact", toShow: null });
+    } else {
+      res.render("artifactdelete", { title: "Delete Artifact", toShow: result });
+    }
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
