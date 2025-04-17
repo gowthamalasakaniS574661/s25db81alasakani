@@ -1,10 +1,19 @@
 extends layout
 
 block content
-  h1= title
-  p Hello from Assignment 10!
-  button(type="button", class="btn btn-secondary", onclick="faster()") Press Me
-  div#faster Add in extra
+  .container.mt-5
+    .text-center
+      h1.text-primary.mb-4= title
+      p.lead Hello from Assignment 10!
+
+      button.btn.btn-outline-info.btn-lg.mb-3(type="button", onclick="faster()")
+        | 🚀 Click Me
+
+      .alert.alert-success.mt-3#faster
+        | Ready to launch...
+
+      a.btn.btn-outline-dark.mt-4(href="/artifacts")
+        | 📜 View Artifacts
 
   script.
     let value = 1;
@@ -13,5 +22,5 @@ block content
     function faster() {
       amt *= 2;
       value += amt;
-      document.getElementById("faster").innerText = `Faster ${value} times ${amt}`;
+      document.getElementById("faster").innerText = `⚡ Boosted ${value} times (x${amt})`;
     }
