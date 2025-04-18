@@ -1,26 +1,10 @@
 extends layout
 
 block content
-  .container.mt-5
-    .text-center
-      h1.text-primary.mb-4= title
-      p.lead Hello from Assignment 10!
-
-      button.btn.btn-outline-info.btn-lg.mb-3(type="button", onclick="faster()")
-        | 🚀 Click Me
-
-      .alert.alert-success.mt-3#faster
-        | Ready to launch...
-
-      a.btn.btn-outline-dark.mt-4(href="/artifacts")
-        | 📜 View Artifacts
-
-  script.
-    let value = 1;
-    let amt = 2;
-
-    function faster() {
-      amt *= 2;
-      value += amt;
-      document.getElementById("faster").innerText = `⚡ Boosted ${value} times (x${amt})`;
-    }
+  if (!user)
+    a.btn.btn-primary(href='/login') Login
+    a.btn.btn-success(href='/register') Register
+  else
+    p You are logged in as #{user.username}
+    a.btn.btn-info(href='/artifacts') Go to Artifacts
+    a.btn.btn-danger(href='/logout') Logout

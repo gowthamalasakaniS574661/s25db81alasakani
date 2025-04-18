@@ -1,33 +1,48 @@
 const express = require('express');
+const passport = require('passport');
 const router = express.Router();
-const Item = require('../models/artifact'); // ✅ Lowercase 'item' for correct file name
+const Account = require('../models/account');
 
-// Root route - renders homepage
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express with MongoDB' });
+router.get('/', (req, res) => {
+  res.render('index', { title: 'Artifact App', user: req.user });
 });
 
-// Route to manually add a test item (for quick testing)
-router.get('/add-item', async (req, res) => {
+router.get('/register', (req, res) => {
+  res.render('register', { title: 'Register' });
+});
+
+router.post('/register', async (req, res) => {
   try {
-    const newItem = new Item({ name: 'Test Item', quantity: 5 });
-    await newItem.save();
-    res.send('✅ Item added to MongoDB!');
+    const existing = await Account.findOne({ username: req.body.username });
+    if (existing) {
+      return res.render('register', { title: 'Register', message: 'User already exists' });
+    }
+
+    const newAccount = new Account({ username: req.body.username });
+    await Account.register(newAccount, req.body.password);
+    res.redirect('/');
   } catch (err) {
-    console.error(err);
-    res.status(500).send('❌ Failed to add item');
+    res.render('register', { title: 'Register', message: 'Error registering user' });
   }
 });
 
-// Route to list all items in JSON format
-router.get('/items', async (req, res) => {
-  try {
-    const items = await Item.find();
-    res.json(items);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('❌ Error retrieving items');
-  }
+router.get('/login', (req, res) => {
+  res.render('login', { title: 'Login' });
+});
+
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  res.redirect('/');
+});
+
+router.get('/logout', (req, res, next) => {
+  req.logout(err => {
+    if (err) return next(err);
+    res.redirect('/');
+  });
+});
+
+router.get('/ping', (req, res) => {
+  res.send('pong!');
 });
 
 module.exports = router;
