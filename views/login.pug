@@ -1,16 +1,58 @@
 extends layout
 
 block content
-  .container.mt-5
-    h1.text-center.mb-4 Login
+  .container.d-flex.justify-content-center.align-items-center.mt-5
+    .card.shadow-lg.p-5.login-card
+      h2.text-center.text-glow.mb-4 Login to Artifact Archive
+      if message
+        p.text-danger.text-center #{message}
 
-    form(action="/login", method="POST")
-      .form-group.mb-3
-        label(for="username") Username
-        input.form-control(type="text", name="username", id="username", placeholder="Enter username", required)
+      form(action="/login", method="post")
+        .form-group.mb-3
+          label.text-light(for="username") Username
+          input.form-control(type="text", name="username", required, placeholder="Enter your username")
 
-      .form-group.mb-3
-        label(for="password") Password
-        input.form-control(type="password", name="password", id="password", placeholder="Enter password", required)
+        .form-group.mb-4
+          label.text-light(for="password") Password
+          input.form-control(type="password", name="password", required, placeholder="Enter your password")
 
-      button.btn.btn-primary(type="submit") Login
+        button.btn.btn-glow.w-100(type="submit") 🔐 Login
+
+      .text-center.mt-3
+        a.text-light(href="/register") Don’t have an account? Register
+
+  style.
+    body {
+      background: radial-gradient(circle at top left, #232526, #414345);
+      font-family: 'Segoe UI', sans-serif;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .login-card {
+      max-width: 420px;
+      background: #1e1e2f;
+      border-radius: 15px;
+    }
+
+    .text-glow {
+      background: linear-gradient(to right, #00f2ff, #0072ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-glow {
+      background: #00f2ff;
+      color: #000;
+      padding: 12px;
+      font-weight: bold;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+      transition: 0.3s ease-in-out;
+      border: none;
+    }
+
+    .btn-glow:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(0, 242, 255, 0.8);
+    }
