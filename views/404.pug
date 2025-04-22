@@ -2,9 +2,60 @@ extends layout
 
 block content
   .container.text-center.mt-5
-    img(src= image, alt="404 Error", style="max-width: 350px; filter: drop-shadow(0 0 12px #00bfff);")
-    h1.text-danger.mt-4.display-4 Unauthorized Access 🚫
-    h2.text-muted.mt-3 #{message}
-    p.mt-2.text-secondary It seems like the page you're looking for doesn't exist.
-    p.text-secondary Double-check the URL or return to safety.
-    a.btn.btn-primary.mt-3(href='/') 🔙 Back to Home
+    h1.text-glow.display-4.mt-5 🚀 404 - Page Not Found
+    p.lead.text-muted.mt-3 Looks like you've wandered off the grid.
+    p.text-light This page might have vanished into another dimension.
+
+    p.text-light.mt-4 You will be redirected to the dashboard in 5 seconds...
+
+    a.btn.btn-glow.mt-3(href="/")
+      i.bi.bi-arrow-left-circle-fill.me-2
+      | Return to Dashboard Now
+
+  script.
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 5000);
+
+  style.
+    body {
+      background: linear-gradient(to right, #141e30, #243b55);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .text-glow {
+      color: #ffffff;
+      text-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff,
+        0 0 20px #0ff,
+        0 0 40px #0ff;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .btn-glow {
+      background-color: #00f2ff;
+      border: none;
+      color: #000;
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .btn-glow:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.9);
+    }
+
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; }
+      50% { text-shadow: 0 0 20px #0ff, 0 0 40px #0ff; }
+    }
