@@ -51,22 +51,24 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
-// -------------------------------
-// 🧠 Passport & Session Setup
-// -------------------------------
+// 🔐 Session + Passport
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Passport strategy
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
+
+// 🔄 Make user available in all views
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
 
 // -------------------------------
 // 🖼️ View Engine
@@ -79,18 +81,47 @@ app.set('view engine', 'pug');
 // -------------------------------
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/artifacts', artifactsRouter); // Main CRUD route
+app.use('/artifacts', artifactsRouter);
 app.use('/grid', gridRouter);
 app.use('/pick', pickRouter);
-app.use('/resource', resourceRouter);   // REST API access
+app.use('/resource', resourceRouter);
 
 // -------------------------------
-// ❌ 404 & Error Handling
+// 🔐 Auth Routes
 // -------------------------------
-app.use((req, res, next) => {
-  next(createError(404, 'Page Not Found'));
+app.get('/login', (req, res) => {
+  res.render('login');
 });
 
+app.post('/login',
+  passport.authenticate('local', {
+    successRedirect: '/artifacts',
+    failureRedirect: '/login',
+    failureFlash: false
+  })
+);
+
+app.get('/logout', (req, res, next) => {
+  req.logout(function (err) {
+    if (err) return next(err);
+    res.redirect('/');
+  });
+});
+
+// -------------------------------
+// ❌ Custom 404 Page (Futuristic)
+// -------------------------------
+app.use((req, res, next) => {
+  res.status(404).render('404', {
+    title: "404 - Not Found",
+    message: "Looks like you're lost in space...",
+    image: "/images/404futuristic.png"  // Ensure this image exists in /public/images/
+  });
+});
+
+// -------------------------------
+// 🌐 Global Error Handler
+// -------------------------------
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

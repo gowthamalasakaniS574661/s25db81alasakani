@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .container.text-center.mt-5
+    h1.text-danger 🚫 Unauthorized Access
+    p.lead.mt-3 You must be logged in to <strong>Create</strong>, <strong>Update</strong>, or <strong>Delete</strong> artifacts.
+    p.text-muted You will be redirected to the login page in <span id="countdown">5</span> seconds...
+    a.btn.btn-primary.mt-3(href='/login') 🔐 Go to Login Now
+
+  script.
+    let countdown = 5;
+    const counter = document.getElementById("countdown");
+    const timer = setInterval(() => {
+      countdown--;
+      counter.textContent = countdown;
+      if (countdown === 0) {
+        clearInterval(timer);
+        window.location.href = "/login";
+      }
+    }, 1000);

@@ -1,6 +1,41 @@
 extends layout
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  .container.text-center.mt-5
+    img(src="https://i.imgur.com/qIufhof.png", alt="404 Image", width="300")
+
+    h1.text-glow.mt-4 404 - Page Not Found
+    p.lead.text-muted This page seems to have traveled to another galaxy.
+    p.text-secondary Double-check the URL or head back to safety.
+
+    a.btn.btn-primary.btn-glow.mt-3(href="/") 🔙 Return Home
+
+  style.
+    .text-glow {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 10px #00f2ff, 0 0 20px #00f2ff, 0 0 30px #00f2ff;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .btn-glow {
+      background-color: #00f2ff;
+      border: none;
+      color: #000;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+      transition: 0.3s ease-in-out;
+    }
+
+    .btn-glow:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.9);
+    }
