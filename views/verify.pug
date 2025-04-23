@@ -3,28 +3,19 @@ extends layout
 block content
   .container.d-flex.justify-content-center.align-items-center.mt-5
     .card.shadow-lg.p-5.register-card
-      h2.text-center.text-glow.mb-4 Create Your Artifact Account
+      h2.text-center.text-glow.mb-4 Email Verification (OTP)
 
       if message
-        .alert.alert-danger.text-center #{message}
+        p.text-danger.text-center #{message}
 
-      form(action="/register", method="post")
-        .form-group.mb-3
-          label.text-light(for="username") Username
-          input#username.form-control(type="text", name="username", required, placeholder="Choose a username")
+      form(action="/verify-otp", method="post")
+        input(type="hidden", name="username", value=username)
 
         .form-group.mb-3
-          label.text-light(for="email") Email Address
-          input#email.form-control(type="email", name="email", required, placeholder="Enter your email for OTP verification")
+          label.text-light(for="otp") Enter OTP
+          input#otp.form-control(type="text", name="otp", required, placeholder="Enter the 6-digit OTP")
 
-        .form-group.mb-4
-          label.text-light(for="password") Password
-          input#password.form-control(type="password", name="password", required, placeholder="Choose a secure password")
-
-        button.btn.btn-glow.w-100(type="submit") ✍️ Register & Receive OTP
-
-      .text-center.mt-3
-        a.text-light(href="/login") 🔐 Already registered? Login here
+        button.btn.btn-glow.w-100(type="submit") 🔐 Verify OTP & Complete Registration
 
   style.
     body {

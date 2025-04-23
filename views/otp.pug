@@ -2,29 +2,27 @@ extends layout
 
 block content
   .container.d-flex.justify-content-center.align-items-center.mt-5
-    .card.shadow-lg.p-5.register-card
-      h2.text-center.text-glow.mb-4 Create Your Artifact Account
+    .card.shadow-lg.p-5.otp-card
+      h2.text-center.text-glow.mb-4 🔐 Two-Factor Authentication
 
       if message
         .alert.alert-danger.text-center #{message}
+      if success
+        .alert.alert-success.text-center #{success}
 
-      form(action="/register", method="post")
-        .form-group.mb-3
-          label.text-light(for="username") Username
-          input#username.form-control(type="text", name="username", required, placeholder="Choose a username")
+      p.text-light.text-center Please check your email and enter the 6-digit OTP to complete your login.
 
-        .form-group.mb-3
-          label.text-light(for="email") Email Address
-          input#email.form-control(type="email", name="email", required, placeholder="Enter your email for OTP verification")
-
+      form(method='POST', action='/otp')
         .form-group.mb-4
-          label.text-light(for="password") Password
-          input#password.form-control(type="password", name="password", required, placeholder="Choose a secure password")
+          label.text-light(for='otp') Enter OTP
+          input#otp.form-control(type='text', name='otp', maxlength='6', required, placeholder='123456')
 
-        button.btn.btn-glow.w-100(type="submit") ✍️ Register & Receive OTP
+        button.btn.btn-glow.w-100(type='submit') ✅ Verify OTP
 
-      .text-center.mt-3
-        a.text-light(href="/login") 🔐 Already registered? Login here
+      .text-center.mt-4
+        a.text-light(href='/resend-otp') 🔁 Didn't receive OTP? Resend
+        br
+        a.text-secondary.mt-2(href='/login') ← Go Back to Login
 
   style.
     body {
@@ -33,8 +31,8 @@ block content
       font-family: 'Segoe UI', sans-serif;
     }
 
-    .register-card {
-      max-width: 480px;
+    .otp-card {
+      max-width: 420px;
       background: #1e1e2f;
       border-radius: 15px;
     }

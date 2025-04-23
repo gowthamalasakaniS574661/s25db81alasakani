@@ -7,9 +7,11 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
-const passport = require('passport');
 const session = require('express-session');
+const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const flash = require('connect-flash');
+
 const Account = require('./models/account');
 
 const indexRouter = require('./routes/index');
@@ -52,13 +54,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
 // -------------------------------
-// 🔐 Passport & Sessions
+// 🔐 Session, Flash & Passport Setup
 // -------------------------------
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false
 }));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -66,9 +69,10 @@ passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
-// 🔄 Make user available in views
+// 🔄 Make user and flash messages available to all views
 app.use((req, res, next) => {
   res.locals.user = req.user;
+  res.locals.message = req.flash('error');
   next();
 });
 
@@ -92,13 +96,20 @@ app.use('/resource', resourceRouter);
 // 🔐 Auth Routes
 // -------------------------------
 app.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login', { title: 'Login' });
 });
 
 app.post('/login',
-  passport.authenticate('local'),
+  (req, res, next) => {
+    if (req.session) req.session.returnTo = req.session.returnTo || req.headers.referer;
+    next();
+  },
+  passport.authenticate('local', {
+    failureRedirect: '/login',
+    failureFlash: 'Invalid username or password'
+  }),
   (req, res) => {
-    const redirectTo = req.session.returnTo || '/';
+    const redirectTo = req.session.returnTo || '/artifacts';
     delete req.session.returnTo;
     res.redirect(redirectTo);
   }
@@ -118,7 +129,7 @@ app.use((req, res, next) => {
   res.status(404).render('404', {
     title: "404 - Not Found",
     message: "Looks like you're lost in space...",
-    image: "/images/404futuristic.png"
+    image: "/images/404futuristic.png" // make sure this file exists
   });
 });
 

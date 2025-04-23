@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .container.mt-5
+    .card.shadow.p-4.mx-auto(style="max-width: 420px")
+      h3.text-center.mb-3.text-glow OTP Verification
+
+      if message
+        .alert.alert-danger.text-center= message
+
+      form(action='/verify-otp', method='post')
+        input(type='hidden', name='username', value=username)
+        input(type='hidden', name='password', value=password)
+        input(type='hidden', name='email', value=email)
+
+        .form-group
+          label(for='otp') Enter the OTP sent to #{email}
+          input.form-control(type='text', name='otp', required)
+
+        button.btn.btn-primary.mt-3(type='submit') ✅ Verify & Register
