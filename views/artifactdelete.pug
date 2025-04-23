@@ -1,49 +1,80 @@
 extends layout
 
 block content
-  h1= title
+  .container.mt-5
+    h1.text-center.text-glow.mb-4 #{title}
 
-  if toShow
-    - let id = toShow._id
-    - let name = toShow.name
-    - let age = toShow.age
-    - let origin = toShow.origin
-    - let actionUrl = `/resource/artifacts/${id}`
+    if toShow
+      - const { _id, name, age, origin } = toShow
+      - const actionUrl = `/resource/artifacts/${_id}`
 
-    div
-      p
-        strong ID:
-        | #{id}
-      p
-        strong Name:
-        | #{name}
-      p
-        strong Age:
-        | #{age}
-      p
-        strong Origin:
-        | #{origin}
+      .card.bg-dark.text-white.shadow-lg.p-4.rounded-4
+        h4.mb-3.text-info.text-uppercase Confirm Deletion
+        p.mb-2
+          strong ID: 
+          | #{_id}
+        p.mb-2
+          strong Name: 
+          | #{name}
+        p.mb-2
+          strong Age: 
+          | #{age}
+        p.mb-4
+          strong Origin: 
+          | #{origin}
 
-    button.btn.btn-danger(onclick="deleteArtifact()") Delete
-    button.btn.btn-secondary(onclick="cancelDelete()") Cancel
+        .d-flex.justify-content-between
+          button.btn.btn-danger.btn-glow.pe-4.ps-4(onclick="deleteArtifact()") 🗑️ Delete
+          button.btn.btn-secondary.pe-4.ps-4(onclick="cancelDelete()") ❌ Cancel
 
-    script.
-      function cancelDelete() {
-        window.location.href = "/artifacts";
-      }
-
-      function deleteArtifact() {
-        fetch("#{actionUrl}", {
-          method: "DELETE"
-        })
-        .then(res => res.json())
-        .then(data => {
-          alert("Deleted successfully!");
+      script.
+        function cancelDelete() {
           window.location.href = "/artifacts";
-        })
-        .catch(err => {
-          alert("Delete failed: " + err);
-        });
-      }
-  else
-    h3 No artifact found to delete.
+        }
+
+        function deleteArtifact() {
+          fetch("#{actionUrl}", {
+            method: "DELETE"
+          })
+          .then(res => res.json())
+          .then(() => {
+            alert("✅ Artifact deleted successfully.");
+            window.location.href = "/artifacts";
+          })
+          .catch(err => {
+            alert("❌ Delete failed: " + err.message);
+          });
+        }
+
+    else
+      .alert.alert-warning.text-center.mt-5
+        h3 ⚠️ No artifact found to delete.
+
+  style.
+    body {
+      background: linear-gradient(to right, #232526, #414345);
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .text-glow {
+      color: #00f2ff;
+      font-size: 2.5rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00f2ff, 0 0 20px #00f2ff;
+    }
+
+    .btn-glow {
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .btn-glow:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+    }
+
+    .card {
+      max-width: 600px;
+      margin: auto;
+    }

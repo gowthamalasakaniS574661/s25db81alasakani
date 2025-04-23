@@ -51,7 +51,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
-// 🔐 Session + Passport
+// -------------------------------
+// 🔐 Passport & Sessions
+// -------------------------------
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -64,20 +66,20 @@ passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
-// 🔄 Make user available in all views
+// 🔄 Make user available in views
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
 
 // -------------------------------
-// 🖼️ View Engine
+// 🖼️ View Engine Setup
 // -------------------------------
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // -------------------------------
-// 🚦 Routes
+// 🌐 Routes
 // -------------------------------
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -94,28 +96,29 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login',
-  passport.authenticate('local', {
-    successRedirect: '/artifacts',
-    failureRedirect: '/login',
-    failureFlash: false
-  })
+  passport.authenticate('local'),
+  (req, res) => {
+    const redirectTo = req.session.returnTo || '/';
+    delete req.session.returnTo;
+    res.redirect(redirectTo);
+  }
 );
 
 app.get('/logout', (req, res, next) => {
-  req.logout(function (err) {
+  req.logout(err => {
     if (err) return next(err);
     res.redirect('/');
   });
 });
 
 // -------------------------------
-// ❌ Custom 404 Page (Futuristic)
+// ❌ 404 Futuristic Page
 // -------------------------------
 app.use((req, res, next) => {
   res.status(404).render('404', {
     title: "404 - Not Found",
     message: "Looks like you're lost in space...",
-    image: "/images/404futuristic.png"  // Ensure this image exists in /public/images/
+    image: "/images/404futuristic.png"
   });
 });
 

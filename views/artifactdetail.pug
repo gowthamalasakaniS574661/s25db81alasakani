@@ -2,24 +2,61 @@ extends layout
 
 block content
   .container.mt-5
-    .card.shadow-sm
-      .card-header.bg-primary.text-white
-        h3.mb-0 Artifact Detail
-      .card-body
-        if !toShow
-          .alert.alert-danger No artifact found with this ID.
-        else
-          ul.list-group
-            li.list-group-item
-              strong ID: 
-              | #{toShow._id}
-            li.list-group-item
-              strong Name: 
-              | #{toShow.name}
-            li.list-group-item
-              strong Age: 
-              | #{toShow.age}
-            li.list-group-item
-              strong Origin: 
-              | #{toShow.origin}
-    a.btn.btn-secondary.mt-3(href='/artifacts') ← Back to List
+    if !toShow
+      .alert.alert-warning.text-center.p-4
+        h3.text-danger ⚠️ Artifact Not Found
+        p The artifact with the specified ID doesn't exist or was removed.
+        a.btn.btn-outline-light.mt-3(href="/artifacts") ← Back to List
+    else
+      .card.bg-dark.text-white.shadow-lg.rounded-4
+        .card-header.bg-gradient-primary.text-glow.text-uppercase
+          h3.mb-0 Artifact Details
+
+        .card-body.p-4
+          ul.list-group.list-group-flush
+            li.list-group-item.bg-transparent.border-secondary.text-light
+              strong ID:
+              |  #{toShow._id}
+            li.list-group-item.bg-transparent.border-secondary.text-light
+              strong Name:
+              |  #{toShow.name}
+            li.list-group-item.bg-transparent.border-secondary.text-light
+              strong Age:
+              |  #{toShow.age}
+            li.list-group-item.bg-transparent.border-secondary.text-light
+              strong Origin:
+              |  #{toShow.origin}
+
+        .card-footer.text-end.bg-transparent.mt-3
+          a.btn.btn-outline-info.btn-glow(href="/artifacts") ← Back to Artifacts
+
+  style.
+    .bg-gradient-primary {
+      background: linear-gradient(90deg, #007cf0, #00dfd8);
+    }
+
+    .text-glow {
+      text-shadow: 0 0 10px #00dfd8, 0 0 20px #007cf0;
+      color: #fff;
+    }
+
+    .btn-glow {
+      box-shadow: 0 0 12px rgba(0, 223, 216, 0.4);
+      border-radius: 8px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .btn-glow:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 223, 216, 0.7);
+    }
+
+    .card {
+      max-width: 650px;
+      margin: auto;
+    }
+
+    body {
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: white;
+    }

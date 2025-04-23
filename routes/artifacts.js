@@ -2,30 +2,40 @@ const express = require("express");
 const router = express.Router();
 const artifact_controller = require("../controllers/artifact");
 
-// Middleware to protect sensitive routes
+// 🔐 Middleware: Protects routes that require authentication
 const secured = (req, res, next) => {
   if (req.user) return next();
+
+  // Save the intended URL for redirect after login
+  req.session.returnTo = req.originalUrl;
+
   res.status(401).render("unauthorized", {
     title: "🔐 Access Denied",
-    message: "🚧 You need to log in to Create, Update, or Delete artifacts.",
+    message: "🚧 Please log in to Create, Update, or Delete artifacts.",
     redirectTo: "/login"
   });
 };
 
-// ------- View Routes (PUG pages) -------
-router.get("/", artifact_controller.artifact_view_all_Page);
-router.get("/detail", artifact_controller.artifact_detail_page);
-router.get("/create", secured, artifact_controller.artifact_create_Page);
-router.get("/update", secured, artifact_controller.artifact_update_Page);
-router.get("/delete", secured, artifact_controller.artifact_delete_Page);
+// -------------------------------
+// 🌐 PAGE VIEWS (PUG Templates)
+// -------------------------------
+router.get("/", secured, artifact_controller.artifact_view_all_Page);          // Dashboard
+router.get("/detail", secured, artifact_controller.artifact_detail_page);      // Detail view
+router.get("/create", secured, artifact_controller.artifact_create_Page);      // Create view
+router.get("/update", secured, artifact_controller.artifact_update_Page);      // Update view
+router.get("/delete", secured, artifact_controller.artifact_delete_Page);      // Delete confirmation
 
-// ------- API Routes (REST) -------
-router.get("/api", artifact_controller.artifact_list);                   // Public access
-router.post("/", secured, artifact_controller.artifact_create_post);    // Requires login
-router.put("/:id", secured, artifact_controller.artifact_update_put);   // Requires login
-router.delete("/:id", secured, artifact_controller.artifact_delete);    // Requires login
+// -------------------------------
+// 🧩 REST API ENDPOINTS (fetch/Postman)
+// -------------------------------
+router.get("/api", secured, artifact_controller.artifact_list);                // Get all
+router.post("/", secured, artifact_controller.artifact_create_post);           // Create
+router.put("/:id", secured, artifact_controller.artifact_update_put);          // Update
+router.delete("/:id", secured, artifact_controller.artifact_delete);           // Delete
 
-// ------- Fallback GET by ID (keep at bottom) -------
-router.get("/:id", artifact_controller.artifact_detail);
+// -------------------------------
+// 🧾 FALLBACK: View by MongoDB ID (must be last)
+// -------------------------------
+router.get("/:id", secured, artifact_controller.artifact_detail);              // Fallback: view one by ID
 
 module.exports = router;

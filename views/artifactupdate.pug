@@ -1,16 +1,20 @@
 extends layout
 
 block content
-  h1.text-center.text-warning.mb-4 Update Artifact
+  h1.text-center.text-gradient.display-5.mb-5 Update Artifact
 
   .container
     if (!toShow)
-      .alert.alert-danger.text-center No artifact found with the provided ID.
+      .alert.alert-danger.text-center.p-4.rounded
+        h4 ⚠️ Artifact Not Found
+        p The artifact you're trying to update does not exist.
+        a.btn.btn-outline-light.mt-3(href="/artifacts") ← Back to List
     else
-      .card.shadow
-        .card-body
-          h5.card-title.text-muted.mb-4 Artifact ID: #{toShow._id}
+      .card.bg-dark.text-white.shadow-lg.rounded-4
+        .card-header.bg-gradient-primary.text-glow
+          h5.mb-0 Editing Artifact ID: #{toShow._id}
 
+        .card-body
           form#ArtifactForm(action=`/resource/artifacts/${toShow._id}?_method=PUT`, method="POST")
             .mb-3
               label.form-label(for='name') Name
@@ -25,19 +29,64 @@ block content
               input#origin.form-control(type='text', name='origin', value=toShow.origin, required)
 
             .d-flex.justify-content-between.mt-4
-              button.btn.btn-primary(type="submit") 💾 Update
-              a.btn.btn-secondary(href="/artifacts") Cancel
+              button.btn.btn-glow.btn-primary(type="submit") 💾 Update
+              a.btn.btn-outline-light(href="/artifacts") Cancel
+
+  style.
+    .text-gradient {
+      background: linear-gradient(to right, #00f2ff, #0072ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .text-glow {
+      text-shadow: 0 0 10px #00f2ff, 0 0 20px #00f2ff;
+    }
+
+    .btn-glow {
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .btn-glow:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 242, 255, 0.9);
+    }
+
+    .bg-gradient-primary {
+      background: linear-gradient(90deg, #007cf0, #00dfd8);
+    }
+
+    .card {
+      max-width: 650px;
+      margin: auto;
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #1f1c2c, #928dab);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
   script.
     document.getElementById('ArtifactForm').addEventListener('submit', (e) => {
       e.preventDefault();
       fetch(e.target.action, {
         method: 'PUT',
-        body: new URLSearchParams(new FormData(e.target))
+        body: new URLSearchParams(new FormData(e.target)),
+        headers: {
+          'Accept': 'application/json'
+        }
       })
-      .then(response => response.json())
-      .then(data => {
-        alert("✅ Update successful");
+      .then(async (response) => {
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error("Server Error: " + text);
+        }
+        return response.json();
+      })
+      .then(() => {
+        alert("✅ Artifact updated successfully!");
         window.location.href = "/artifacts";
       })
       .catch(err => {

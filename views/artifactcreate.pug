@@ -1,19 +1,53 @@
 extends layout
 
 block content
-  h1= title
+  .container.mt-5
+    h1.text-center.text-glow.mb-4 #{title}
 
-  form(id='ArtifactForm', action="/artifacts", method="POST")
-    div.form-group
-      label(for='name') Name
-      input#name.form-control(type='text', name='name')
-    div.form-group
-      label(for='age') Age
-      input#age.form-control(type='number', name='age')
-    div.form-group
-      label(for='origin') Origin
-      input#origin.form-control(type='text', name='origin')
-    button.btn.btn-primary(type="submit") Create
+    form#ArtifactForm(action="/artifacts", method="POST", class="mx-auto", style="max-width: 500px;")
+      .form-group.mb-3
+        label(for='name').form-label.text-light Name
+        input#name.form-control(type='text', name='name', required, placeholder='Enter artifact name')
+
+      .form-group.mb-3
+        label(for='age').form-label.text-light Age
+        input#age.form-control(type='number', name='age', required, placeholder='Enter artifact age')
+
+      .form-group.mb-4
+        label(for='origin').form-label.text-light Origin
+        input#origin.form-control(type='text', name='origin', required, placeholder='Enter origin')
+
+      button.btn.btn-glow.w-100(type="submit") 🚀 Create Artifact
+
+  style.
+    body {
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .text-glow {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #00f2ff;
+      text-shadow: 0 0 10px #00f2ff, 0 0 20px #00f2ff;
+    }
+
+    .btn-glow {
+      background: #00f2ff;
+      color: black;
+      border: none;
+      font-weight: bold;
+      padding: 12px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .btn-glow:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 242, 255, 0.8);
+    }
 
   script.
     document.forms['ArtifactForm'].addEventListener('submit', (event) => {
@@ -21,9 +55,7 @@ block content
       fetch(event.target.action, {
         method: 'POST',
         body: new URLSearchParams(new FormData(event.target)),
-        headers: {
-          'Accept': 'application/json'
-        }
+        headers: { 'Accept': 'application/json' }
       })
       .then(async (resp) => {
         if (!resp.ok) {
@@ -32,7 +64,7 @@ block content
         }
         return resp.json();
       })
-      .then((body) => {
+      .then(() => {
         alert("✅ Artifact was successfully saved!");
         window.location.href = "/artifacts";
       })

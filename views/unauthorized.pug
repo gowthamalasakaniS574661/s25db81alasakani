@@ -2,19 +2,24 @@ extends layout
 
 block content
   .container.text-center.mt-5
-    h1.text-danger 🚫 Unauthorized Access
-    p.lead.mt-3 You must be logged in to <strong>Create</strong>, <strong>Update</strong>, or <strong>Delete</strong> artifacts.
-    p.text-muted You will be redirected to the login page in <span id="countdown">5</span> seconds...
-    a.btn.btn-primary.mt-3(href='/login') 🔐 Go to Login Now
+    h1.text-danger.display-4 🔐 Unauthorized Access
+    p.lead.mt-3 #{message || "You must be logged in to access this page."}
+    p.text-muted.mt-2 You will be redirected to the login page in 
+      span#countdown.text-primary 5 
+      | seconds...
+
+    a.btn.btn-warning.mt-3(href=redirectTo || "/login") 🔑 Go to Login Now
 
   script.
-    let countdown = 5;
-    const counter = document.getElementById("countdown");
-    const timer = setInterval(() => {
-      countdown--;
-      counter.textContent = countdown;
-      if (countdown === 0) {
-        clearInterval(timer);
-        window.location.href = "/login";
+    let counter = 5;
+    const countdown = document.getElementById("countdown");
+    const redirectTo = "#{redirectTo || '/login'}";
+
+    const interval = setInterval(() => {
+      counter--;
+      countdown.innerText = counter;
+      if (counter <= 0) {
+        clearInterval(interval);
+        window.location.href = redirectTo;
       }
     }, 1000);
