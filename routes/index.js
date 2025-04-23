@@ -64,9 +64,9 @@ router.get('/login', (req, res) => {
   res.render('login', { title: 'Login' });
 });
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', (req, res, next) => {
   passport.authenticate('local', async (err, user) => {
-    if (err || !user) return res.redirect('/login');
+    if (err || !user) return res.render('login', { title: 'Login', message: 'Invalid credentials' });
 
     const otp = crypto.randomInt(100000, 999999).toString();
     otpMap.set(user.username, { otp, createdAt: Date.now() });
@@ -91,13 +91,9 @@ router.post('/otp', async (req, res) => {
   const username = req.session.pendingUser;
   const entry = otpMap.get(username);
 
-  if (!entry || Date.now() - entry.createdAt > 5 * 60 * 1000) {
+  if (!entry || Date.now() - entry.createdAt > 5 * 60 * 1000 || otp !== entry.otp) {
     otpMap.delete(username);
-    return res.redirect('/login');
-  }
-
-  if (otp !== entry.otp) {
-    return res.render('otp', { title: 'Enter OTP', message: '❌ Invalid OTP' });
+    return res.render('otp', { title: 'Enter OTP', message: '❌ Invalid or expired OTP.' });
   }
 
   const user = await Account.findOne({ username });
@@ -109,10 +105,11 @@ router.post('/otp', async (req, res) => {
   });
 });
 
-// ✅ Resend OTP (Login only)
+// ✅ Resend OTP
 router.get('/resend-otp', async (req, res) => {
   const username = req.session.pendingUser;
   if (!username) return res.redirect('/login');
+
   const user = await Account.findOne({ username });
   if (!user) return res.redirect('/login');
 

@@ -7,8 +7,6 @@ block content
 
       if message
         .alert.alert-danger.text-center #{message}
-      if success
-        .alert.alert-success.text-center #{success}
 
       p.text-light.text-center Please check your email and enter the 6-digit OTP to complete your login.
 
@@ -19,10 +17,10 @@ block content
 
         button.btn.btn-glow.w-100(type='submit') ✅ Verify OTP
 
-      .text-center.mt-4
-        a.text-light(href='/resend-otp') 🔁 Didn't receive OTP? Resend
+      .text-center.mt-3
+        a.text-secondary(href='/resend-otp') Resend OTP
         br
-        a.text-secondary.mt-2(href='/login') ← Go Back to Login
+        a.text-secondary.mt-2(href='/login') ← Back to Login
 
   style.
     body {
